@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block metadescription %}
+            Welcome to Online Banking
+    {% endblock %}
+    {% block title %}
+            Online Banking
+    {% endblock %}
+
+    {% block content %}
+
+<br>
+<div class="card" style="width: 25rem;height:20rem;margin: 0 auto;float: none;margin-bottom: 10px;">
+    <div class="card-body">
+<form action="login" method="post">
+    {% csrf_token %}
+  <div class="container">
+    <h2><b>Log in</b></h2>
+    <label style="width:600px;"><b>Username</b></label><br>
+    <input type="text" placeholder="Enter Username" name="username" style="width:300px;"required><br>
+
+    <label style="width:300px;"><b>Password</b></label><br>
+    <input type="password" placeholder="Enter Password" name="password" style="width:300px;" required><br>
+<br>
+    <input type="submit"><span>
+      <button type="reset">Cancel</button></span><br>
+    <span><a href="{% url 'credentials:register' %}">Register</a></span>
+  </div>
+</form>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<!--    <meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applyform</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body class="d-flex flex-column vh-100" style="background-color:lightblue;">
+<div class="container">
+    <header>
+<center>
+    <a href="{% url 'dropdown:index' %}">
+    <img src="{% static 'img/logobank.jpg' %}" alt="logo image" width="130px" height="130px">
+    </a>
+  </center>
+
+</header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Hello {{user.username}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'credentials:logout' %}">Logout</a>
+        </li>
+
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'credentials:login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'credentials:register' %}">Register</a>
+        </li>
+
+        {% endif %}
+
+
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Branch
+          </a>
+          <ul class="dropdown-menu">
+
+            {% for d in links %}
+
+            <li><a class="dropdown-item" href="{{d.dlink}}">{{d.departmentname}}
+            </a></li>
+
+          {% endfor %}
+          </ul>
+        </li>
+      </ul>
+
+
+      </div>
+  </div>
+</nav>
+
+
+
+
+</div>
+
+
+<div class="card" style="width: 100rem;height:300rem;margin: 0 auto;float: none;margin-bottom: 10px;">
+    <div class="card-body">
+        <h1><center>Apply Form</center></h1>
+        <h3>Please fill in this form to apply.</h3><br>
+        <form method="post">
+        {% csrf_token %}
+        <div class="container">
+            <input type="text" placeholder="Enter Name" name="name" style="width:600px;" required><br><br>
+            <input type="date" name="dob"style="width:600px;" required><br><br>
+            <input type="text" placeholder="Enter Age" name="age" style="width:600px;" required><br><br>
+            <input type="radio" name="male">Male<span><input type="radio" name="female">Female</span><br><br>
+            <input type="text" placeholder="Enter Mobile" name="mobile" style="width:600px;" required><br><br>
+            <input type="email" placeholder="Enter email" name="email" style="width:600px;" required><br><br>
+            <input type="text" placeholder="Enter address" name="address" style="width:600px;" required><br><br>
+            <label style="width:300px;">Select Account Type</label>
+            <select style="width:300px;">
+                <option>Savings Account</option>
+                <option>Current Account</option>
+            </select><br><br>
+            <label style="width:300px;">Select Materials</label>
+            <input type="checkbox">Debit Card<span><input type="checkbox">Credit Card</span>
+            <span><input type="checkbox">Cheque Book</span><br><br>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <select name="dept" id="department" class="form-control">
+                        <option value="0">--Select District--</option>
+                        {% for item in department  %}
+                        <option value="{{ item.id }}">{{ item.departmentname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+<br>
+                <div class="col-md-4">
+                    <select name="emp" id="Employee" class="form-control">
+                        <option value="0">--Select Branch--</option>
+                        {% for item in employee  %}
+                        <option value="{{ item.deptid_id }}">{{ item.empname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+        </div>
+<br>
+        <input type="submit">
+        {% for messages in messages %}
+        <h3 style="color:green"> {{messages}} </h3>
+        <br>
+        <a href="{% url 'dropdown:index' %}"> Return Home</a>
+        {% endfor %}
+        <span>
+        <button><a href="{% url 'credentials:logout' %}">Log Out</a></button>
+        </span>
+
+   </form>
+</div>
+</div>
+
+<br>
+<br>
+<br>
+<script>
+
+$(document).ready(function(){
+
+ var department = $("#department");
+ var Employee = $("#Employee");
+ var $options = Employee.find('option');
+ department.on('change',function(){
+    Employee.html($options.filter('[value="'+ this.value  +'"]'));
+ }).trigger('change');
+
+
+});
+</script>
+</body>
+</html>
